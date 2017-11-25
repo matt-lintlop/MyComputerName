@@ -118,6 +118,9 @@ int main (int argc, const char * argv[])
 {
     @autoreleasepool {
         
+        for (int val = 0; val < 1000; val++) {
+            printf("Value = %d: Hex = 0x%X\n", val, val);
+        }
         MyMath *math = [[MyMath alloc] init];
         NSArray *numbers = [math createwRandomNumbersWithCount:50 max:1000];
         NSLog(@"================================\n\n");
