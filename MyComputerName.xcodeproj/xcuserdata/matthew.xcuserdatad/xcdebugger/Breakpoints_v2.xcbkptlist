@@ -10,13 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyComputerName/main.m"
-            timestampString = "533275839.312136"
+            timestampString = "533432317.115367"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
-            landmarkName = "main"
-            landmarkType = "9">
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "-mergeSortNumbers:left:right:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -111,6 +111,76 @@ typedef int (^myAddBlockType)(int, int);
     }
 }
 
+-(void)testEnumeration {
+    
+    NSArray *names = @[@"Bill", @"Bob", @"Mary", @"Chris", @"Roger", @"Cathy"];
+    [names enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSLog(@"%ld %@", idx, obj);
+    }];
+}
+
+- (NSArray*)mergeSortNumbers:(NSArray *)numbers {
+    if (numbers.count <= 1) {
+        return numbers;
+    }
+    
+    int mid = (numbers.count-1) / 2;
+    NSMutableArray *left = [NSMutableArray array];
+    for (int i=0; i<=mid; i++) {
+        [left addObject:numbers[i]];
+    }
+    NSMutableArray *right = [NSMutableArray array];
+    for (int i=mid+1; i<numbers.count; i++) {
+        [right addObject:numbers[i]];
+    }
+    left = [[self mergeSortNumbers:left] mutableCopy];
+    right = [[self mergeSortNumbers:right] mutableCopy];
+    return [self mergeList1:left withList2:right];
+}
+- (NSArray*)mergeSortNumbers:(NSArray *)numbers left:(int)left right:(int)right {
+    if (left >= right) return numbers;
+    
+    int mid = (left + right) / 2;
+    NSArray *leftNumbers = [self mergeSortNumbers:numbers left:0  right:mid];
+    NSArray *rightNumbers = [self mergeSortNumbers:numbers left:mid+1  right:right];
+    return [self mergeList1:leftNumbers withList2:rightNumbers];
+}
+
+-(NSArray*)mergeList1:(NSArray *)list1 withList2:(NSArray *)list2 {
+    int count1 = (int)list1.count;
+    int index1 = 0;
+    int count2 = (int)list2.count;
+    int index2 = 0;
+    NSMutableArray *mergeList = [[NSMutableArray alloc] initWithCapacity:count1+count2];
+    int mergeIndex = 0;
+
+    while ((index1 < count1) && (index2 < count2)) {
+        if (list1[index1] < list2[index2]) {
+            mergeList[mergeIndex] = list1[index1];
+            mergeIndex += 1;
+            index1 += 1;
+        }
+        else {
+            mergeList[mergeIndex] = list2[index2];
+            mergeIndex += 1;
+            index2 += 1;
+        }
+    }
+    
+    while (index1 < count1) {
+        mergeList[mergeIndex] = list1[index1];
+        mergeIndex += 1;
+        index1 += 1;
+    }
+    
+    while (index2 < count2) {
+        mergeList[mergeIndex] = list2[index2];
+        mergeIndex += 1;
+        index2 += 1;
+    }
+
+    return mergeList;
+}
 
 @end
 
@@ -118,27 +188,20 @@ int main (int argc, const char * argv[])
 {
     @autoreleasepool {
         
-        for (int val = 0; val < 1000; val++) {
-            printf("Value = %d: Hex = 0x%X\n", val, val);
-        }
         MyMath *math = [[MyMath alloc] init];
-        NSArray *numbers = [math createwRandomNumbersWithCount:50 max:1000];
+        NSArray* numbers = [math createwRandomNumbersWithCount:100 max:1000];
+
         NSLog(@"================================\n\n");
         NSLog(@"Random Numbers:");
         [math showNumbers:numbers];
         
-        NSArray *sorted = [math quickSortNumbers:numbers];
+        NSArray *sorted = [math mergeSortNumbers:numbers];
+
         NSLog(@"================================\n\n");
         NSLog(@"Sorted Numbers:");
         [math showNumbers:sorted];
   
-        NSNumber *randonInArray = sorted[sorted.count/2];
-
-        int result = [math binarySearchWithNumbers:sorted left:0 right:sorted.count-1 value:randonInArray.intValue];
-        
-        NSLog(@"Binary Serach Index = %d for value = %d", result, randonInArray.intValue);
     }
     
 }
-
 
