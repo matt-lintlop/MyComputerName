@@ -182,13 +182,65 @@ typedef int (^myAddBlockType)(int, int);
     return mergeList;
 }
 
+-(BOOL)areWordsAnagrams:(NSString*)word1 word2:(NSString *)word2 {
+    
+    if (word1.length != word2.length) return false;
+    
+    char* word1Histogram = [self makeWordHistogram:word1];
+    char* word2Histogram = [self makeWordHistogram:word2];
+    
+    BOOL result = true;
+    for (short i=0; i<255; i++) {
+        if (*(word1Histogram+i)!= *(word2Histogram+i)) {
+            result = false;
+            break;
+        }
+    }
+
+    free(word1Histogram);
+    free(word2Histogram);
+
+    return result;
+}
+
+-(Ptr)makeWordHistogram:(NSString *)word {
+    char *histogram = malloc(256);
+    for (short i=0; i<=255;i++) {
+        *(histogram+i) = 0;
+    }
+    
+    const char *utf8String = [[word uppercaseString] UTF8String];
+    char *charPtr = utf8String;
+    
+    char ch;
+    while ((ch = *charPtr) != 0) {
+        *(histogram+ch) += 1;
+        charPtr += 1;
+    }
+    
+    return (Ptr)histogram;
+}
 @end
 
 int main (int argc, const char * argv[])
 {
     @autoreleasepool {
-        
+    
         MyMath *math = [[MyMath alloc] init];
+        
+        
+        NSString *word1 = @"MATTHEW";
+        NSString *word2 = @"TAMWHAT";
+        BOOL result = [math areWordsAnagrams:word1 word2:word2];
+        if (result) {
+            NSLog(@"%@ and %@ are anagrams.", word1, word2);
+        }
+        else {
+            NSLog(@"%@ and %@ are not anagrams.", word1, word2);
+        }
+        return 0;
+        
+        
         NSArray* numbers = [math createwRandomNumbersWithCount:100 max:1000];
 
         NSLog(@"================================\n\n");
